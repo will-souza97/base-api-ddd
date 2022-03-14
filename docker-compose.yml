@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  application:
+    container_name: pollux-api
+    restart: always
+    build:
+      context: .
+      target: develop
+      dockerfile: Dockerfile
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+    volumes:
+      - .:/home/node/app
+    ports:
+      - '3000:3000'
+      - '9229:9229'
+    networks:
+      - pollux-net
+
+networks:
+  pollux-net:
+    driver: bridge
