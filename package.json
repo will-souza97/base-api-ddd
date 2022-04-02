@@ -37,7 +37,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "develop": "tsnd -r tsconfig-paths/register --respawn --transpile-only --inspect=0.0.0.0:9229 --ignore-watch node_modules --watch 'src/**' src/server.ts",
-    "test": "jest --silent --runInBand --detectOpenHandles --forceExit",
+    "test": "jest --no-cache --silent --runInBand --detectOpenHandles --forceExit",
     "lint": "eslint --ext ts --fix src/**/*.ts",
     "prepare": "husky install"
   },
