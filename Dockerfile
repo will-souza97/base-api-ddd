@@ -12,7 +12,7 @@ USER node
 COPY --chown=node:node . ./
 COPY --chown=node:node package.json yarn.* tsconfig.json ./
 RUN yarn install --production=false --frozen-lockfile
-ENTRYPOINT ["/home/node/app/scripts/server-develop.sh"]
+CMD ["sh", "scripts/server-develop.sh"]
 
 # Build Environment Production Dependencies
 FROM base AS production
@@ -25,17 +25,17 @@ RUN yarn install --production=true --frozen-lockfile
 FROM base AS build
 WORKDIR /home/node/app
 USER node
+COPY --chown=node:node . ./
 COPY --chown=node:node --from=develop /home/node/app/ .
-COPY . .
 RUN yarn build
 
 # Runtime
 FROM base AS runtime
+ENV NODE_ENV=production
 WORKDIR /home/node/app
 USER node
-ENV NODE_ENV=production
 COPY --chown=node:node --from=production /home/node/app/node_modules /home/node/app/node_modules/
-COPY --chown=node:node --from=build /home/node/app/dist /home/node/app/dist/
-COPY --chown=node:node --from=build /home/node/app/scripts /home/node/app/scripts/
 COPY --chown=node:node --from=build /home/node/app/package.json /home/node/app/package.json
-ENTRYPOINT ["/home/node/app/scripts/server.sh"]
+COPY --chown=node:node --from=build /home/node/app/scripts /home/node/app/scripts/
+COPY --chown=node:node --from=build /home/node/app/dist /home/node/app/dist/
+CMD ["sh", "scripts/server.sh"]
