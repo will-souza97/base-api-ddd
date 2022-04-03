@@ -17,8 +17,8 @@ services:
       - '3000:3000'
       - '9229:9229'
     networks:
-      - pollux-net
+      - app-net
 
 networks:
-  pollux-net:
+  app-net:
     driver: bridge
