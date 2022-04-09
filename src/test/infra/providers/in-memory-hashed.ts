@@ -9,3 +9,5 @@ export class InMemoryHashed implements Hashed {
     return true;
   }
 }
+
+export default new InMemoryHashed();

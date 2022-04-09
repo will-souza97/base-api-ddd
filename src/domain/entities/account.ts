@@ -18,7 +18,7 @@ export class Account extends Entity<AccountProps> {
   }
 
   get password() {
-    return this.props.password.value;
+    return this.props.password;
   }
 
   private constructor(props: AccountProps, id?: string) {

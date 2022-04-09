@@ -25,7 +25,6 @@ export class Password {
     if (password.length > 255 || password.length < 8) {
       return false;
     }
-
     return true;
   }
 }
