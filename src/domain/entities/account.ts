@@ -5,12 +5,12 @@ import { InvalidEmailError } from '@domain/values-objects/errors/invalid-email-e
 import { InvalidPasswordError } from '@domain/values-objects/errors/invalid-password-error';
 import { Password } from '@domain/values-objects/password';
 
-type AccountProps = {
+export type AccountProps = {
   email: Email;
   password: Password;
 };
 
-type AccountErrors = InvalidEmailError | InvalidPasswordError;
+export type AccountErrors = InvalidEmailError | InvalidPasswordError;
 
 export class Account extends Entity<AccountProps> {
   get email() {
@@ -18,7 +18,7 @@ export class Account extends Entity<AccountProps> {
   }
 
   get password() {
-    return this.props.password;
+    return this.props.password.value;
   }
 
   private constructor(props: AccountProps, id?: string) {
@@ -29,11 +29,11 @@ export class Account extends Entity<AccountProps> {
     props: AccountProps,
     id?: string,
   ): Either<AccountErrors, Account> {
-    const emailResult = Email.create(props.email.value);
-    if (emailResult.isLeft()) return left(emailResult.value);
+    const emailOrError = Email.create(props.email.value);
+    if (emailOrError.isLeft()) return left(emailOrError.value);
 
-    const passwordResult = Password.create(props.password.value);
-    if (passwordResult.isLeft()) return left(passwordResult.value);
+    const passwordOrError = Password.create(props.password.value);
+    if (passwordOrError.isLeft()) return left(passwordOrError.value);
 
     const account = new Account(props, id);
 
