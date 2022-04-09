@@ -14,3 +14,5 @@ export class Argon2Hashed implements Hashed {
     return await verify(payloadHash, payload, { salt: this.salt });
   }
 }
+
+export default new Argon2Hashed();
