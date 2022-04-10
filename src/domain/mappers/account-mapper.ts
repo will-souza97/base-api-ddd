@@ -7,9 +7,8 @@ export class AccountMapper {
   static async toPersistence(user: Account) {
     return {
       id: user.id,
-      name: user.name.value,
-      email: user.email.value,
-      password: Argon2Hashed.generate(user.password.value),
+      email: user.email,
+      password: Argon2Hashed.generate(user.password),
     };
   }
 }
