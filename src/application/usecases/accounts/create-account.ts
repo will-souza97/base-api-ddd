@@ -2,11 +2,13 @@ import { AccountRepository } from '@application/repositories/account-repository'
 import { Either, left, right } from '@core/logic/either';
 import { Account, AccountErrors } from '@domain/entities/account';
 import { Email } from '@domain/values-objects/email';
+import { Name } from '@domain/values-objects/name';
 import { Password } from '@domain/values-objects/password';
 
 import { ExistingEmailError } from './errors/existing-email';
 
 type CreateAccountRequest = {
+  name: string;
   email: string;
   password: string;
 };
@@ -20,11 +22,17 @@ export class CreateAccount {
   constructor(private readonly repository: AccountRepository) {}
 
   async execute({
+    name,
     email,
     password,
   }: CreateAccountRequest): Promise<CreateAccountResponse> {
+    const nameOrError = Name.create(name);
     const emailOrError = Email.create(email);
     const passwordOrError = Password.create(password);
+
+    if (nameOrError.isLeft()) {
+      return left(nameOrError.value);
+    }
 
     if (emailOrError.isLeft()) {
       return left(emailOrError.value);
@@ -35,6 +43,7 @@ export class CreateAccount {
     }
 
     const accountOrError = Account.create({
+      name: nameOrError.value,
       email: emailOrError.value,
       password: passwordOrError.value,
     });

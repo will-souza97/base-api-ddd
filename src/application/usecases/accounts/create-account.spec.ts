@@ -15,19 +15,11 @@ describe('Create Account', () => {
 
   describe('ACCEPT', () => {
     it('should be able to create new account', async () => {
+      const name = 'test';
       const email = 'email@example.com';
       const password = 'test1234';
 
-      const response = await createAccount.execute({ email, password });
-
-      expect(response.isRight()).toBeTruthy();
-    });
-
-    it('should be able to create new account with password hashed', async () => {
-      const email = 'email@example.com';
-      const password = 'test1234';
-
-      const response = await createAccount.execute({ email, password });
+      const response = await createAccount.execute({ name, email, password });
 
       expect(response.isRight()).toBeTruthy();
     });
@@ -35,28 +27,33 @@ describe('Create Account', () => {
 
   describe('REJECT', () => {
     it('should not be able to create new account with invalid data', async () => {
+      const name = 'te';
       const email = 'email';
       const password = 'pass';
 
-      const response = await createAccount.execute({ email, password });
+      const response = await createAccount.execute({ name, email, password });
 
       expect(response.isLeft()).toBeTruthy();
     });
 
     it('should not be able to create new account with email existent', async () => {
+      const name = 'test';
       const email = 'email@example.com';
       const password = 'test1234';
 
       await createAccount.execute({
+        name,
         email,
         password,
       });
 
       const response = await createAccount.execute({
+        name,
         email,
         password,
       });
 
+      expect(response.isLeft()).toBeTruthy();
       expect(response.value).toEqual(
         new ExistingEmailError('email@example.com'),
       );
